@@ -1,0 +1,96 @@
+service: serverless-ecommerce-api
+frameworkVersion: '3'
+plugins:
+  - serverless-esbuild
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+    NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
+    TABLE_NAME: 'BASE'
+    USER_PK: 'USER'
+
+functions: 
+  getProduct: 
+    handler: ./src/getProduct.main 
+    events:
+      - http: 
+          path: /products/{product}
+          method: get
+  createProduct: 
+    handler: ./src/createProduct.main
+    events:
+      - http: 
+          path: /products/create
+          method: post
+  updateProduct: 
+    handler: ./src/updateProduct.main
+    events:
+      - http: 
+          path: /products/{product}/update
+          method: put
+  getAllProduct: 
+    handler: ./src/getAllProduct.main
+    events:
+      - http:
+          path: /products
+          method: get
+  
+  deleteProduct: 
+    handler: ./src/deleteProduct.main
+    events:
+      - http:
+          path: /products/{product}/delete
+          method: delete
+resources:
+  Resources:
+    YourDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BASE
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S 
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: GSI2
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 2
+              WriteCapacityUnits: 2
+
+package:
+  individually: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude:
+      - 'aws-sdk'
+    target: node14
+    define:
+      'require.resolve': undefined
+    platform: node
+    concurrency: 10
