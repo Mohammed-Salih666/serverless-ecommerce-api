@@ -1,0 +1,33 @@
+import {User} from 'src/database/user'; 
+
+export const getAllUsers = async(): Promise<User[]> => {
+    const usersRecord = await User.getAllUsers(); 
+    const users: User[] = [];
+    usersRecord.forEach(record => {
+        const user = User.fromItem(record); 
+        users.push(user); 
+    })
+
+    return users; 
+}
+
+export const getUser = async (username: string): Promise<User> => { 
+    const user = await User.getUser(username); 
+    return user; 
+}
+
+export const createUser = async(user: User): Promise<User> => {
+    const createdUser = await createUser(user); 
+    return createdUser; 
+}
+
+export const updateUser = async(username: string, attribute: string, value: string) => {
+    if(attribute == "username" || attribute == "pk" || attribute == "sk") throw new Error(`Cannot update ${attribute}. It is part of the primary key.`)
+    const user = await User.update(username, attribute, value); 
+    return user; 
+}
+
+export const deleteUser = async(username: string): Promise<User> => {
+    const user = await User.deleteUser(username); 
+    return user; 
+}
