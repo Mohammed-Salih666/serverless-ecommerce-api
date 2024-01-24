@@ -6,14 +6,16 @@ export class Product  {
     name: string; 
     price: string; 
     category: string; 
+    images: string[]; 
     pk: string = process.env.PRODUCT_PK; 
     sk: string; 
 
-    constructor(name: string, price: string, category: string) {
+    constructor(name: string, price: string, category: string, images?: string[]) {
         this.name = name; 
         this.price = price; 
         this.category = category;
-        this.sk = `${this.pk}#${name}`
+        this.sk = `${this.pk}#${name}`; 
+        if(images) this.images = images; 
     }
 
     static fromItem(item?: Record<string, any>): Product {
