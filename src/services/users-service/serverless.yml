@@ -1,0 +1,96 @@
+service: serverless-ecommerce-api
+frameworkVersion: '3'
+plugins:
+  - serverless-esbuild
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+    NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
+    TABLE_NAME: 'BASE'
+    USER_PK: 'USER'
+
+functions: 
+  getUser: 
+    handler: ./src/getUser.main 
+    events:
+      - http: 
+          path: /users/{username}
+          method: get
+  createUser: 
+    handler: ./src/createUser.main
+    events:
+      - http: 
+          path: /users/create
+          method: post
+  updateUser: 
+    handler: ./src/updateUser.main
+    events:
+      - http: 
+          path: /users/{username}/update
+          method: put
+  getAllUsers: 
+    handler: ./src/getAllUsers.main
+    events:
+      - http:
+          path: /users
+          method: get
+  
+  deleteUser: 
+    handler: ./src/deleteUser.main
+    events:
+      - http:
+          path: /users/{username}/delete
+          method: delete
+resources:
+  Resources:
+    YourDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BASE
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S 
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: GSI2
+            KeySchema:
+              - AttributeName: category
+                KeyType: HASH
+              - AttributeName: sk
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 2
+              WriteCapacityUnits: 2
+
+package:
+  individually: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude:
+      - 'aws-sdk'
+    target: node14
+    define:
+      'require.resolve': undefined
+    platform: node
+    concurrency: 10
