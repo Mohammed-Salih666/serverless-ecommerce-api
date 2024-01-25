@@ -34,8 +34,8 @@ functions:
       - http: 
           path: /categories/{category}/update
           method: put
-  getAllCategory: 
-    handler: ./src/getAllCategory.main
+  getAllCategories: 
+    handler: ./src/getAllCategories.main
     events:
       - http:
           path: /categories
