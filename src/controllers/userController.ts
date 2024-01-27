@@ -1,7 +1,7 @@
 import {User} from 'src/database/user'; 
 
 export const getAllUsers = async(): Promise<User[]> => {
-    const usersRecord = await User.getAllUsers(); 
+    const usersRecord = await User.getAll(); 
     const users: User[] = [];
     usersRecord.forEach(record => {
         const user = User.fromItem(record); 
@@ -12,12 +12,12 @@ export const getAllUsers = async(): Promise<User[]> => {
 }
 
 export const getUser = async (username: string): Promise<User> => { 
-    const user = await User.getUser(username); 
+    const user = await User.get(username); 
     return user; 
 }
 
 export const createUser = async(user: User): Promise<User> => {
-    const createdUser = await createUser(user); 
+    const createdUser = await User.create(user); 
     return createdUser; 
 }
 
@@ -28,6 +28,6 @@ export const updateUser = async(username: string, attribute: string, value: stri
 }
 
 export const deleteUser = async(username: string): Promise<User> => {
-    const user = await User.deleteUser(username); 
+    const user = await User.remove(username); 
     return user; 
 }
