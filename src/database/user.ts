@@ -30,7 +30,7 @@ export class User  {
         return new User(item.username, item.name, item.email, item.password, item.address);  
     }
 
-    static createUser = async (user: User): Promise<User> => {
+    static create = async (user: User): Promise<User> => {
         const client = getDocClient(); 
         
         console.log(user);
@@ -48,7 +48,7 @@ export class User  {
         }
     }
     
-    static getUser = async (username: string): Promise<User> => {
+    static get = async (username: string): Promise<User> => {
         const client = getDocClient(); 
         const key = {
             pk: process.env.USER_PK, 
@@ -70,7 +70,7 @@ export class User  {
         }
     }
     
-    static getAllUsers = async () => {
+    static getAll = async () => {
         const client = getDocClient(); 
 
         const command = new QueryCommand({
@@ -120,7 +120,7 @@ export class User  {
     
     
     
-    static deleteUser = async(username: string): Promise<User> => {
+    static remove = async(username: string): Promise<User> => {
         const client = getDocClient();
         const key = {
             pk: "USER", 
