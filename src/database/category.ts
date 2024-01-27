@@ -103,7 +103,7 @@ export class Category {
         }
     }
 
-    static deleteCategory = async(name: string): Promise<Category> => {
+    static remove = async(name: string): Promise<Category> => {
         const client = getDocClient(); 
         const key = {
             pk: Category.pk, 

@@ -30,6 +30,6 @@ export const updateProduct = async(name: string, attribute: string, value: strin
 }
 
 export const deleteProduct = async (name: string): Promise<Product> => {
-    const product = await Product.deleteProduct(name); 
+    const product = await Product.remove(name); 
     return product;
 }

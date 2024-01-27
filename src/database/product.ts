@@ -109,7 +109,7 @@ export class Product  {
         }
     }
 
-    static deleteProduct = async(name: string): Promise<Product> => {
+    static remove = async(name: string): Promise<Product> => {
         const client = getDocClient(); 
         const key = {
             pk: process.env.PRODUCT_PK, 

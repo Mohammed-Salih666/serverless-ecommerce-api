@@ -1,5 +1,4 @@
 import {Category} from 'src/database/category'; 
-import { Product } from 'src/database/product';
 import {unmarshall} from '@aws-sdk/util-dynamodb'
 
 export const getAllCategories = async(): Promise<Category[]> => {
@@ -32,7 +31,7 @@ export const updateCategory = async (name: string, attribute: string, value: str
 }
 
 export const deleteCategory = async(name: string): Promise<Category> => {
-    const category = await Category.deleteCategory(name); 
+    const category = await Category.remove(name); 
     return category; 
 }
 
