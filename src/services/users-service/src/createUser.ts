@@ -1,6 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { createUser } from "src/controllers/userController";
+import Address from "src/database/address";
 import { User } from "src/database/user";
+import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
 
 export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
 
@@ -10,20 +12,14 @@ export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) 
 
     const user = new User(username, name, email, password, address);
     // const address: Address = {city: "city", district: "district", zipcode: "123"}
-    // const user = new User('batman123', 'Bruce Wayne', 'a@b.c', '124354', address); 
+    // const user = new User('salih123', 'Mohammed Salih', 'a@b.c', '124354', address); 
 
     try {
         const res = await createUser(user); 
-        return {
-            statusCode: 200, 
-            body: JSON.stringify(res)
-        }
+        return formatJsonResponse(res);
     } catch (error) {
         console.log(error); 
-        return {
-            statusCode: 500, 
-            body: "Internal Server Error: " + error
-        }
+        return formatErrorResponse(error);
     }
 
 }

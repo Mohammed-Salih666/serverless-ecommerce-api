@@ -1,6 +1,7 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
 import { deleteUser } from "src/controllers/userController";
 import { User } from "src/database/user";
+import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
 
 export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
     const username: string = event.pathParameters.username; 
@@ -8,19 +9,11 @@ export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) 
     try {
         const user: User = await deleteUser(username); 
         
-        const response = {
-            statusCode: 200, 
-            body: JSON.stringify(user)
-        }
-
+        const response = formatJsonResponse(user); 
         return response;
     } catch (error) {
         console.log(error); 
-        const response = {
-            statusCode: 500, 
-            body: "Internal Server Error. " + error
-        }
-
+        const response = formatErrorResponse(error);
         return response;
     }
 }

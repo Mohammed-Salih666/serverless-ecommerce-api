@@ -1,21 +1,14 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { getAllUsers } from "src/controllers/userController";
 import { User } from "src/database/user";
+import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
 
 export const main: APIGatewayProxyHandler = async() => {
     try {
         const users: User[] = await getAllUsers(); 
-        const response = {
-            statusCode: 200, 
-            body: JSON.stringify(users)
-        }
-        return response;
+        return formatJsonResponse(users);
     } catch (error) {
         console.log(error); 
-        const response = {
-            statusCode: 500, 
-            body: "Internal Server Error: " + error
-        }
-        return response
+        return formatErrorResponse(error);
     }
 }
