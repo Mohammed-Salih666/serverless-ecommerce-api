@@ -12,12 +12,12 @@ export class User  {
     pk = process.env.USER_PK;
     sk: string; 
     key: Object; 
-    constructor(username: string, name: string, email: string, password: string, address: Address) {
+    constructor(username: string, name: string, email: string, password: string, address?: Address) {
         this.username = username; 
         this.name = name; 
         this.password = password; 
         this.email = email; 
-        this.address.push(address); 
+        if (address) this.address.push(address); 
         this.sk = `${this.pk}#${username}`; 
         this.key = {
             pk: this.pk,
