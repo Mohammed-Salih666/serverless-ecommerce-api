@@ -1,11 +1,11 @@
-service: serverless-ecommerce-api
+service: serverless-ecommerce-api-users-service
 frameworkVersion: '3'
 plugins:
   - serverless-esbuild
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs20.x
   apiGateway:
     minimumCompressionSize: 1024
     shouldStartNameWithService: true
@@ -47,40 +47,8 @@ functions:
       - http:
           path: /users/{username}/delete
           method: delete
-resources:
-  Resources:
-    YourDynamoDBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: BASE
-        AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-          - AttributeName: sk
-            AttributeType: S 
-        KeySchema:
-          - AttributeName: pk
-            KeyType: HASH
-          - AttributeName: sk
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: GSI2
-            KeySchema:
-              - AttributeName: category
-                KeyType: HASH
-              - AttributeName: sk
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 2
-              WriteCapacityUnits: 2
-
 package:
-  individually: true
+  individually: false
 
 custom:
   esbuild:

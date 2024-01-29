@@ -1,11 +1,11 @@
-service: serverless-ecommerce-api
+service: serverless-ecommerce-api-products-service
 frameworkVersion: '3'
 plugins:
   - serverless-esbuild
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs20.x
   apiGateway:
     minimumCompressionSize: 1024
     shouldStartNameWithService: true
@@ -13,7 +13,6 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
     NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000'
     TABLE_NAME: 'BASE'
-    USER_PK: 'USER'
 
 functions: 
   getProduct: 
@@ -34,8 +33,8 @@ functions:
       - http: 
           path: /products/{product}/update
           method: put
-  getAllProduct: 
-    handler: ./src/getAllProduct.main
+  getAllProducts: 
+    handler: ./src/getAllProducts.main
     events:
       - http:
           path: /products
@@ -47,40 +46,8 @@ functions:
       - http:
           path: /products/{product}/delete
           method: delete
-resources:
-  Resources:
-    YourDynamoDBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: BASE
-        AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-          - AttributeName: sk
-            AttributeType: S 
-        KeySchema:
-          - AttributeName: pk
-            KeyType: HASH
-          - AttributeName: sk
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: GSI2
-            KeySchema:
-              - AttributeName: category
-                KeyType: HASH
-              - AttributeName: sk
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 2
-              WriteCapacityUnits: 2
-
 package:
-  individually: true
+  individually: false
 
 custom:
   esbuild:
