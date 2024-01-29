@@ -1,8 +1,12 @@
+import httpErrorHandler from "@middy/http-error-handler";
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
+import * as middy from "middy";
 import { updateUser } from "src/controllers/userController";
+import { validator } from "src/middleware/validator";
+import { updateUserRequest } from "src/request-schemas/user-requests";
 import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
 
-export const main: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) => {
+const updateUserHandler: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) => {
   
     const data = JSON.parse(event.body); 
     const username = event.pathParameters.username; 
@@ -16,3 +20,7 @@ export const main: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) =
         return formatErrorResponse(error); 
     }
 }
+
+export const main = middy(updateUserHandler)
+.use(validator(updateUserRequest))
+.use(httpErrorHandler()); 

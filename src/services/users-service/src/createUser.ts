@@ -1,16 +1,20 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { createUser } from "src/controllers/userController";
-import Address from "src/database/address";
 import { User } from "src/database/user";
 import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
+import middy from '@middy/core';
+import httpErrorHandler from "@middy/http-error-handler";
+import { validator } from "src/middleware/validator";
+import { createUserRequest } from "src/request-schemas/user-requests";
 
-export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
+const createUserHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
 
     const data = JSON.parse(event.body); 
+    console.log(data);
 
-    const {username, name, email, password, address} = data;
+    const {username, name, email, password} = data;
 
-    const user = new User(username, name, email, password, address);
+    const user = new User(username, name, email, password);
     // const address: Address = {city: "city", district: "district", zipcode: "123"}
     // const user = new User('salih123', 'Mohammed Salih', 'a@b.c', '124354', address); 
 
@@ -23,3 +27,7 @@ export const main: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) 
     }
 
 }
+
+export const main = middy(createUserHandler)
+.use(validator(createUserRequest))
+.use(httpErrorHandler());
