@@ -1,8 +1,12 @@
+import httpErrorHandler from "@middy/http-error-handler";
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
+import * as middy from "middy";
 import { createProduct } from "src/controllers/productController";
 import {Product} from "src/database/product"; 
+import { validator } from "src/middleware/validator";
+import { createproductRequest } from "src/request-schemas/product-requests";
 
-export const main: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) => {
+const createProductHandler: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) => {
     const data = JSON.parse(event.body); 
 
     const {name, price, category} = data; 
@@ -25,3 +29,7 @@ export const main: APIGatewayProxyHandler = async(event: APIGatewayProxyEvent) =
         return response;
     }
 }
+
+export const main = middy(createProductHandler)
+.use(validator(createproductRequest))
+.use(httpErrorHandler()); 
