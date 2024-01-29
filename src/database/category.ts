@@ -76,7 +76,7 @@ export class Category {
         }
     }
 
-    static update = async(name: string, attribute, value) => {
+    static update = async(name: string, attribute: string, value: string) => {
         const client = getDocClient(); 
         const key = {
             pk: Category.pk, 
