@@ -5,7 +5,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs14.x
   apiGateway:
     minimumCompressionSize: 1024
     shouldStartNameWithService: true

@@ -36,7 +36,7 @@ export class User  {
         console.log(user);
         const command = new PutCommand({
             TableName: process.env.TABLE_NAME, 
-            Item: user
+            Item: user,
         }); 
     
         try {
