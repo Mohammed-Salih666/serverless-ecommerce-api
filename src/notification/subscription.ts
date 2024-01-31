@@ -1,4 +1,3 @@
-import { SNSMessage } from "aws-lambda";
 import { SNS } from "aws-sdk";
 
 const sns = new SNS();
@@ -19,11 +18,11 @@ export const createTopic = async (topicName: string) => {
     return response;
 }
 
-export const publishToTopic = async (topicArn: string, event: SNSMessage) => {
+export const publishToTopic = async (topicArn: string, message: string) => {
 
    const response = await sns.publish({
         TopicArn: topicArn, 
-        Message: JSON.stringify(event)
+        Message:  message
     }).promise(); 
 
     return response; 
