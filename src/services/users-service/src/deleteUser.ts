@@ -1,12 +1,11 @@
 import httpErrorHandler from "@middy/http-error-handler";
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
-import * as middy from "middy";
 import { deleteUser } from "src/controllers/userController";
 import { User } from "src/database/user";
 import { validator } from "src/middleware/validator";
 import { deleteUserRequest } from "src/request-schemas/user-requests";
 import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
-
+import middy from '@middy/core';
 
 const deleteUserHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
     const username: string = event.pathParameters.username; 

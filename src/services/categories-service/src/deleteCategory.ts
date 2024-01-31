@@ -1,6 +1,6 @@
 import httpErrorHandler from "@middy/http-error-handler";
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
-import * as middy from "middy";
+import middy from '@middy/core'
 import { deleteCategory } from "src/controllers/categoryController";
 import { Category } from "src/database/category";
 import { validator } from "src/middleware/validator";

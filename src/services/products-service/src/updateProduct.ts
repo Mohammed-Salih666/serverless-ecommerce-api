@@ -1,6 +1,6 @@
 import httpErrorHandler from "@middy/http-error-handler";
 import { APIGatewayProxyHandler, APIGatewayProxyEvent } from "aws-lambda";
-import * as middy from "middy";
+import middy from '@middy/core'
 import { updateProduct } from "src/controllers/productController";
 import { validator } from "src/middleware/validator";
 import { updateProductRequest } from "src/request-schemas/product-requests";
