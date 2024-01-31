@@ -1,6 +1,6 @@
 import {SES} from 'aws-sdk';
 
-export const sendUserUpdatedEmail = async (addresses: string[], updatedAttribute: string, newValue: string) => {
+export const sendUserUpdatedEmail = async (address: string, updatedAttribute: string, newValue: string) => {
    const ses = new SES();
 
    const message: SES.Message = {
@@ -16,11 +16,12 @@ export const sendUserUpdatedEmail = async (addresses: string[], updatedAttribute
 
    const params = {
       Destination: {
-         ToAddresses: addresses,
+         ToAddresses: [address],
       },
       Source: "",
       Message: message
    }
    const response = await ses.sendEmail(params).promise();
+
    return response; 
 }
