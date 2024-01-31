@@ -1,4 +1,5 @@
 import {User} from 'src/database/user'; 
+import { publishToTopic } from 'src/notification/subscription';
 
 export const getAllUsers = async(): Promise<User[]> => {
     const usersRecord = await User.getAll(); 
@@ -24,6 +25,7 @@ export const createUser = async(user: User): Promise<User> => {
 export const updateUser = async(username: string, attribute: string, value: string) => {
     if(attribute == "username" || attribute == "pk" || attribute == "sk") throw new Error(`Cannot update ${attribute}. It is part of the primary key.`)
     const user = await User.update(username, attribute, value); 
+    publishToTopic(process.env.USER_UPDATED_TOPIC, "User has been updated"); 
     return user; 
 }
 
