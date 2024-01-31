@@ -1,20 +1,22 @@
 import middy from "@middy/core";
 import httpErrorHandler from "@middy/http-error-handler";
-import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
+import { SNSEvent, SNSHandler } from "aws-lambda";
 import { sendUserUpdatedEmail } from "src/notification/userUpdated";
-import { formatErrorResponse, formatJsonResponse } from "src/tools/responseFormatter";
 
-const sendEmailHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent) => {
+const sendEmailHandler: SNSHandler = async (event: SNSEvent) => {
     
-    const body = JSON.parse(event.body); 
-
-    const {addresses, updatedAttribute, newValue} = body; 
+    const records = event.Records; 
 
     try {
-        const response = await sendUserUpdatedEmail(addresses, updatedAttribute, newValue); 
-        return formatJsonResponse(response);
-    } catch (error) {
-        formatErrorResponse(error);
+            records.forEach(async record => {
+                const address = record.Sns.MessageAttributes.email.Value;
+                const updatedAttribute = record.Sns.MessageAttributes.attribute.Value;
+                const newValue = record.Sns.MessageAttributes.newValue.Value; 
+                await sendUserUpdatedEmail(address, updatedAttribute, newValue) 
+            });
+
+        } catch (error) {
+            console.error(error); 
     }
 }
 
