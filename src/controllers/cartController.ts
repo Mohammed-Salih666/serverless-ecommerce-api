@@ -1,4 +1,5 @@
 import { Cart } from "src/database/cart";
+import { CartItem } from "src/database/cartItem";
 import { Product } from "src/database/product";
 
 export const getCart = async(username: string): Promise<Cart> => {
@@ -8,18 +9,22 @@ export const getCart = async(username: string): Promise<Cart> => {
 
 export const getProducts = async(username: string): Promise<Product[]> => {
     const cart = await getCart(username); 
-    return cart.products; 
+    const products: Product[] = []; 
+    cart.items.forEach(item => {
+        products.push(item.product);
+    })
+    return products; 
 }
 
-export const addProduct = async(username: string, product: Product): Promise<Cart> => {
-   const cart=  await Cart.update(username, "products", product); 
+export const addItem = async(username: string, item: CartItem): Promise<Cart> => {
+   const cart=  await Cart.update(username, "products", item); 
    return cart; 
 }
 
-export const createCart = async (username: string, product: Product): Promise<Cart> => {
+export const createCart = async (username: string, item: CartItem): Promise<Cart> => {
     let cart = await getCart(username); 
     if(!cart) {
-        cart = new Cart(username, product)
+        cart = new Cart(username, item)
         await Cart.create(cart); 
     }; 
 
