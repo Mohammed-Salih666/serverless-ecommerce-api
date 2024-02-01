@@ -1,19 +1,20 @@
 import { getDocClient } from "./client";
 import {DeleteCommand, GetCommand, PutCommand, UpdateCommand} from '@aws-sdk/lib-dynamodb'; 
-import { Product } from "./product";
+import { CartItem } from "./cartItem";
 
 export class Cart {
     private static tableName = process.env.TABLE_NAME; 
-    isActive: string; 
-    products: Product[] = []; 
     user: string; 
+    code: string; 
+    items: CartItem[] = []; 
     static pk: string = "USER"; 
     sk: string;
 
-    constructor(username: string, product: Product) {
+    constructor(username: string, item: CartItem) {
         this.user = username; 
         this.sk = `USER#${username}#CART`; 
-        this.products.push(product); 
+        this.items.push(item); 
+        this.code = `cart-${new Date().getTime().toLocaleString()}`
     }
 
     static fromItem(item?: Record<string, any>): Cart {
@@ -59,7 +60,7 @@ export class Cart {
     }
    }
 
-   static update = async (username: string, attribute: string, value: boolean | Product): Promise<Cart> => {
+   static update = async (username: string, attribute: string, value: boolean | CartItem): Promise<Cart> => {
 
     const client = getDocClient(); 
     const key = {
