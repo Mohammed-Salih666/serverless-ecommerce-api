@@ -29,7 +29,7 @@ functions:
           method: post
           
   sendUserUpdatedEmail: 
-    handler: ./src/sendUserUpdatedEmail.ts
+    handler: ./src/sendUserUpdatedEmail.main
     events: 
       - http:
           path: /send-update-email
