@@ -1,4 +1,5 @@
 import {Product} from 'src/database/product'; 
+import { unmarshallRecords } from 'src/tools/recordFormatter';
 
 export const getAllProducts = async(): Promise<Product[]> => {
     const prdouctsRecord = await Product.getAll(); 
@@ -9,7 +10,8 @@ export const getAllProducts = async(): Promise<Product[]> => {
         products.push(product);
     }); 
 
-    return products; 
+    const ps = unmarshallRecords(prdouctsRecord);
+    return ps; 
 }
 
 export const getProduct = async (name: string): Promise<Product> => {
