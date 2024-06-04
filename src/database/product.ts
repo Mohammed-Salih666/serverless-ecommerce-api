@@ -1,6 +1,7 @@
 import { getDocClient } from './client';
 import { DeleteCommand, GetCommand, PutCommand, UpdateCommand} from '@aws-sdk/lib-dynamodb';
 import { QueryCommand } from '@aws-sdk/client-dynamodb';
+import { marshallInput } from '@aws-sdk/lib-dynamodb/dist-types/commands/utils';
 
 export class Product  {
     name: string; 
@@ -51,7 +52,7 @@ export class Product  {
             TableName: process.env.TABLE_NAME,
             KeyConditionExpression: "pk = :entity", 
             ExpressionAttributeValues: {
-                ":entity": {S: "PRODUCT"},
+                ":entity": {S: "product"},
             }
         });
 
