@@ -1,0 +1,7 @@
+services: 
+  users: 
+    path: ./src/services/users-service
+  products: 
+    path: ./src/services/products-service
+  categories:  
+    path: ./src/services/categories-service
